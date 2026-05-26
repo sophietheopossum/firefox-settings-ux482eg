@@ -35,6 +35,8 @@ user_pref("browser.gesture.swipe.left", "");
 user_pref("browser.gesture.swipe.right", "");
 user_pref("browser.tabs.unloadOnLowMemory", true);
 user_pref("content.notify.interval", 100000);
+//new  ui
+user_pref("browser.nova.enabled", true);
 // Enables the new native Cookie Banner blocking
 user_pref("cookiebanners.service.mode", 1);
 user_pref("cookiebanners.service.mode.privateBrowsing", 1);
