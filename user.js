@@ -106,6 +106,7 @@ user_pref("webgl.msaa-force", true);
 user_pref("webgl.msaa-samples", 8);
 user_pref("webgl.out-of-process.shmem-size", 1048576);
 user_pref("widget.disable-swipe-tracker", true);
+user_pref("widget.wayland.vsync.enabled", false);
 
 // Hardware Handshake (Fixes the dmabuf SIGSEGV, default behaviour for now)
 //user_pref("gfx.webrender.compositor", false);
