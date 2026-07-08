@@ -43,6 +43,7 @@ user_pref("cookiebanners.service.mode.privateBrowsing", 1);
 user_pref("dom.ipc.processCount", 16);
 // Dynamic scaling
 user_pref("dom.ipc.processCount.webIsolated", -1);
+user_pref("dom.max_script_run_time", 30);
 user_pref("dom.webgpu.wgpu-backend", "vulkan");
 user_pref("gfx.blithelper.lut-size.rgb.b", 64);
 user_pref("gfx.blithelper.lut-size.rgb.g", 64);
