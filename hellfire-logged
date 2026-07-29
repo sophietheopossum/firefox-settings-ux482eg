@@ -1,0 +1,32 @@
+#!/bin/sh
+# Launch hellfire with stderr captured.
+#
+# Gecko prints Wayland protocol errors to stderr and then aborts (SIGSEGV via
+# raise, si_code SI_TKILL). Launched from the dock, stderr goes nowhere, so the
+# one line naming the failing object is lost and the coredump alone can't
+# identify it. Keep it on disk instead.
+#
+# Referenced by hellfire-prime.desktop, which is symlinked into
+# /usr/share/applications. Environment lives here so all three Exec lines
+# (default / new window / private window) stay in sync.
+
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
+LOG="$STATE_DIR/hellfire-stderr.log"
+
+mkdir -p "$STATE_DIR"
+
+# Keep one generation and cap growth. ~/shoji_wm/logs once reached 71 GB from an
+# unbounded error loop; an append-only stderr log is the same failure waiting to
+# happen if a warning ever fires per-frame.
+if [ -f "$LOG" ] && [ "$(wc -c <"$LOG")" -gt 5242880 ]; then
+    mv -f "$LOG" "$LOG.1"
+fi
+
+printf '\n===== launched %s =====\n' "$(date -Is)" >>"$LOG"
+
+exec env \
+    MOZ_ENABLE_WAYLAND=1 \
+    __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 \
+    __GL_SHADER_DISK_CACHE_SIZE=1073741824 \
+    __GL_SHADER_DISK_CACHE=1 \
+    /usr/bin/hellfire "$@" 2>>"$LOG"
