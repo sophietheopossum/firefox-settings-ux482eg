@@ -32,6 +32,7 @@ has_gimple() {
 
 args=()
 pending_format=""
+pending_opaque=""
 for a in "$@"; do
     if [[ -n $pending_format ]]; then
         pending_format=""
@@ -39,9 +40,22 @@ for a in "$@"; do
         args+=("-b" "$a")
         continue
     fi
+    # Value of an option that takes a separate path, passed through verbatim
+    # and never sniffed. This matters: GCC is built --enable-plugin, so it
+    # passes "-plugin .../liblto_plugin.so" on EVERY link, LTO or not — and
+    # the plugin binary itself contains the ".gnu.lto_" string it exists to
+    # look for. Sniffing it made has_gimple hit unconditionally and quietly
+    # sent every gcc link to the fallback. "-o" is here for the same class of
+    # reason: relinking over a previous LTO output must not re-trigger it.
+    if [[ -n $pending_opaque ]]; then
+        pending_opaque=""
+        args+=("$a")
+        continue
+    fi
     case $a in
         -b|--format) pending_format=1; continue ;;
         --format=elf64-x86-64|-belf64-x86-64) continue ;;
+        -plugin|-o|--output|-dynamic-linker) pending_opaque=1 ;;
     esac
     args+=("$a")
     [[ $backend == /usr/bin/ld.mold ]] && continue
