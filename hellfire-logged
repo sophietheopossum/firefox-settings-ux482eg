@@ -24,9 +24,19 @@ fi
 
 printf '\n===== launched %s =====\n' "$(date -Is)" >>"$LOG"
 
-exec env \
+# Extension JavaScript errors are ~99.98% of stderr here — 82k lines / 12 MB in
+# four minutes on the first run, against 13 lines of everything else. They would
+# bury the Wayland protocol error this exists to catch, and the launch-time
+# rotation above cannot help within a single session. Drop them at the source.
+# Deny-list rather than allow-list: anything unanticipated still reaches the log.
+#
+# `exec` is gone deliberately — it cannot apply to a pipeline, so this shell
+# stays alive as the parent. `2>&1 1>/dev/null` is order-sensitive: it points
+# stderr at the pipe first, then sends stdout to /dev/null.
+env \
     MOZ_ENABLE_WAYLAND=1 \
     __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 \
     __GL_SHADER_DISK_CACHE_SIZE=1073741824 \
     __GL_SHADER_DISK_CACHE=1 \
-    /usr/bin/hellfire "$@" 2>>"$LOG"
+    /usr/bin/hellfire "$@" 2>&1 1>/dev/null \
+    | grep --line-buffered -vE '^JavaScript (error|warning):' >>"$LOG"
