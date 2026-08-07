@@ -70,6 +70,7 @@ user_pref("gfx.webgpu.ignore-blocklist", true);
 user_pref("gfx.webrender.all", true);
 user_pref("gfx.webrender.batched-texture-uploads", true);
 user_pref("gfx.webrender.batching.lookback", 20);
+user_pref("gfx.webrender.compositor", true);
 user_pref("gfx.webrender.layer-compositor", true);
 user_pref("gfx.webrender.precache-shaders", true);
 user_pref("gfx.webrender.quality.force-subpixel-aa-where-possible", true);
@@ -108,10 +109,6 @@ user_pref("webgl.msaa-samples", 8);
 user_pref("webgl.out-of-process.shmem-size", 1048576);
 user_pref("widget.disable-swipe-tracker", true);
 user_pref("widget.wayland.vsync.enabled", false);
-
-// Hardware Handshake (Fixes the dmabuf SIGSEGV, default behaviour for now)
-//user_pref("gfx.webrender.compositor", false);
-//user_pref("gfx.x11-egl.force-enabled", false);
 
 //TODO
 //gfx?
