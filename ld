@@ -1,6 +1,6 @@
 #!/bin/bash
-# ld → Wild (system-wide performance default), with two compatibility shims,
-# both of them for Free Pascal:
+# ld → Wild (system-wide performance default), with three compatibility shims,
+# the first two for Free Pascal:
 #
 # 1. FPC hardcodes the BFD-only "-b elf64-x86-64" input-format flag, which Wild
 #    rejects outright ("unrecognized option(s): -b"), exactly as LLD did before
@@ -14,7 +14,13 @@
 #    parses it happily. So any input that looks like a linker script routes the
 #    whole link back to LLD.
 #
-# There was a third shim, from the LLD era, routing GCC-LTO links to mold: LLD
+# 3. Wild is x86-64 only: a 32-bit link fails with "-m elf_i386 is not yet
+#    supported", and because GCC asks the linker to identify itself by running
+#    "gcc -m32 -Wl,--version", the failure surfaces upstream of any actual link
+#    as meson's "Unable to detect linker for compiler `gcc -m32 ...`" — which
+#    names neither Wild nor this shim. So an elf_i386 emulation routes to lld
+#
+# There was a fourth shim, from the LLD era, routing GCC-LTO links to mold: LLD
 # cannot load GCC's LTO plugin, so GIMPLE-only objects linked as "undefined
 # symbol: ..." and it broke every makepkg lto build (e.g. qbittorrent-enhanced,
 # which surfaced as a bogus CMake configure error). Removed 7/8/2026 — Wild
@@ -34,6 +40,7 @@ is_ld_script() {
 args=()
 pending_format=""
 pending_opaque=""
+pending_emul=""
 for a in "$@"; do
     if [[ -n $pending_format ]]; then
         pending_format=""
@@ -54,10 +61,21 @@ for a in "$@"; do
         args+=("$a")
         continue
     fi
+    # Output emulation, latched because GCC passes it as "-m elf_i386" rather
+    # than joined. Checked before the input scan below, since it decides the
+    # backend on its own and nothing an input says can override it.
+    if [[ -n $pending_emul ]]; then
+        pending_emul=""
+        [[ $a == elf_i386 ]] && backend=/usr/bin/ld.lld
+        args+=("$a")
+        continue
+    fi
     case $a in
         -b|--format) pending_format=1; continue ;;
         --format=elf64-x86-64|-belf64-x86-64) continue ;;
         -plugin|-o|--output|-dynamic-linker) pending_opaque=1 ;;
+        -m) pending_emul=1 ;;
+        -melf_i386) backend=/usr/bin/ld.lld ;;
     esac
     args+=("$a")
     # Once something has routed us off the default there is nothing left to
