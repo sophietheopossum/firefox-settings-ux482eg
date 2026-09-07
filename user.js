@@ -94,6 +94,7 @@ user_pref("network.http.pacing.requests.enabled", false);
 user_pref("network.lna.block_trackers", true);
 user_pref("privacy.trackingprotection.content.protection.enabled", true);
 user_pref("privacy.trackingprotection.content.protection.test_list_urls", "https://easylist.to/easylist/easylist.txt|https://easylist.to/easylist/easyprivacy.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/unbreak.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/privacy.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/badware.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/filters.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/quick-fixes.txt|https://malware-filter.gitlab.io/malware-filter/urlhaus-filter-online.txt");
+user_pref("toolkit.asyncshutdown.crash_timeout", 180000);
 user_pref("webgl.1.allow-core-profiles", true);
 user_pref("webgl.allow-fb-invalidation", true);
 user_pref("webgl.allow-immediate-queries", true);
