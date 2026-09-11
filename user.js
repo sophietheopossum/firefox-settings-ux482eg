@@ -109,7 +109,9 @@ user_pref("webgl.msaa-force", true);
 user_pref("webgl.msaa-samples", 8);
 user_pref("webgl.out-of-process.shmem-size", 1048576);
 user_pref("widget.disable-swipe-tracker", true);
-user_pref("widget.wayland.vsync.enabled", false);
+// keep on: with it off, a stalled buffer release made webrender allocate a new gpu
+// buffer every frame (10.4 GiB of dmabufs, session-wide oom on 11/9/2026)
+user_pref("widget.wayland.vsync.enabled", true);
 
 //TODO
 //gfx?
