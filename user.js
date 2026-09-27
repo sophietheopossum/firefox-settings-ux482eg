@@ -45,6 +45,9 @@ user_pref("dom.ipc.processCount", 16);
 user_pref("dom.ipc.processCount.webIsolated", -1);
 user_pref("dom.max_script_run_time", 30);
 user_pref("dom.webgpu.wgpu-backend", "vulkan");
+// Floorp drops the "Firefox/<ver>" UA token by default; without it Keeper (and
+// UA-sniffing sites) cannot tell this is Firefox ("please update your Keeper app").
+user_pref("general.useragent.compatMode.firefox", true);
 user_pref("gfx.blithelper.lut-size.rgb.b", 64);
 user_pref("gfx.blithelper.lut-size.rgb.g", 64);
 user_pref("gfx.blithelper.lut-size.rgb.r", 64);
