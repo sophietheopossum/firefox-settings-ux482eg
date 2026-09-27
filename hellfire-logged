@@ -29,14 +29,37 @@ printf '\n===== launched %s =====\n' "$(date -Is)" >>"$LOG"
 # bury the Wayland protocol error this exists to catch, and the launch-time
 # rotation above cannot help within a single session. Drop them at the source.
 # Deny-list rather than allow-list: anything unanticipated still reaches the log.
+# The Widget rules drop pure input noise -- rollup checks, scroll and pan events,
+# button presses -- which were 1,960 of ~2,700 lines in the first hour. What they
+# deliberately keep is nsWindow::NotifyOcclusionState (the occlusion transition
+# this logging exists to catch) and the RequestRepaint/ScheduleComposite trio,
+# whose disappearance is itself the evidence that painting stopped.
 #
 # `exec` is gone deliberately — it cannot apply to a pipeline, so this shell
 # stays alive as the parent. `2>&1 1>/dev/null` is order-sensitive: it points
 # stderr at the pipe first, then sends stdout to /dev/null.
+# Why MOZ_LOG: on 21/9 the page content and every UI popup stopped drawing for
+# 9 h while the CHROME kept painting normally. Chrome lives on the toplevel
+# surface; page content (WebRender native layers) and popups are wl_subsurfaces
+# -- so the toplevel was fine and only subsurfaces were refused, matching the
+# 484 "Couldn't map window as subsurface because its parent is not mapped"
+# warnings in this log. GDK believed the parent toplevel was unmapped when the
+# compositor had it mapped and was still delivering frame callbacks; nothing
+# re-maps it, which is why no poke recovered it.
+#
+# Widget covers the map/unmap bookkeeping that went wrong; WidgetVsync is kept
+# because occlusion and vsync state feed the same decision to stop painting.
+#
+# Debug (4), not Verbose (5), deliberately: the rotation above only runs at
+# LAUNCH, so a line printed per vsync would grow this log without bound inside
+# one session -- the same shape as the 71 GB incident. Raise to 5 only for a
+# short, watched capture. `timestamp` is what makes the lines correlatable with
+# the compositor log and the journal.
 env \
+    MOZ_LOG="${MOZ_LOG:-timestamp,Widget:4,WidgetVsync:4}" \
     MOZ_ENABLE_WAYLAND=1 \
     __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 \
     __GL_SHADER_DISK_CACHE_SIZE=1073741824 \
     __GL_SHADER_DISK_CACHE=1 \
     /usr/bin/hellfire "$@" 2>&1 1>/dev/null \
-    | grep --line-buffered -vE '^JavaScript (error|warning):' >>"$LOG"
+    | grep --line-buffered -vE '^JavaScript (error|warning):|D/Widget \[[^]]*\]: (nsWindow::CheckForRollup|OnScrollEvent|\[[0-9]+\] pan smooth event|Button [0-9]+ (press|release))' >>"$LOG"
