@@ -44,7 +44,9 @@ user_pref("dom.ipc.processCount", 16);
 // Dynamic scaling
 user_pref("dom.ipc.processCount.webIsolated", -1);
 user_pref("dom.max_script_run_time", 30);
+user_pref("dom.webgpu.enabled", true);
 user_pref("dom.webgpu.wgpu-backend", "vulkan");
+user_pref("general.smoothScroll.msdPhysics.enabled", true);
 // Floorp drops the "Firefox/<ver>" UA token by default; without it Keeper (and
 // UA-sniffing sites) cannot tell this is Firefox ("please update your Keeper app").
 user_pref("general.useragent.compatMode.firefox", true);
@@ -74,6 +76,7 @@ user_pref("gfx.webrender.all", true);
 user_pref("gfx.webrender.batched-texture-uploads", true);
 user_pref("gfx.webrender.batching.lookback", 20);
 user_pref("gfx.webrender.compositor", true);
+user_pref("gfx.webrender.compositor.force-enabled", true);
 user_pref("gfx.webrender.layer-compositor", true);
 user_pref("gfx.webrender.precache-shaders", true);
 user_pref("gfx.webrender.quality.force-subpixel-aa-where-possible", true);
@@ -82,10 +85,9 @@ user_pref("image.mem.max_decoded_image_kb", 512000);
 user_pref("layers.acceleration.force-enabled", true);
 user_pref("layers.gpu-process.max_restarts", 20);
 user_pref("layers.gpu-process.stable.min-uptime-ms", 2000);
-// AV1 is heavy; disable to force VP9/H264
-user_pref("media.av1.enabled", false);
+user_pref("media.av1.enabled", true);
 user_pref("media.ffmpeg.allow-openh264", true);
-user_pref("media.ffmpeg.disable-software-fallback", true);
+user_pref("media.ffmpeg.disable-software-fallback", false);
 user_pref("media.hardware-video-decoding.force-enabled", true);
 user_pref("media.hardware-video-encoding.force-enabled", true);
 user_pref("media.navigator.mediadatadecoder_vp8_hardware_enabled", true);
@@ -94,6 +96,7 @@ user_pref("network.dnsCacheEntries", 1000);
 user_pref("network.http.max-connections", 1800);
 user_pref("network.http.max-persistent-connections-per-server", 10);
 user_pref("network.http.pacing.requests.enabled", false);
+user_pref("network.http.referer.XOriginTrimmingPolicy", 2);
 user_pref("network.lna.block_trackers", true);
 user_pref("privacy.trackingprotection.content.protection.enabled", true);
 user_pref("privacy.trackingprotection.content.protection.test_list_urls", "https://easylist.to/easylist/easylist.txt|https://easylist.to/easylist/easyprivacy.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/unbreak.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/privacy.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/badware.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/filters.txt|https://raw.githubusercontent.com/uBlockOrigin/uAssets/refs/heads/master/filters/quick-fixes.txt|https://malware-filter.gitlab.io/malware-filter/urlhaus-filter-online.txt");
