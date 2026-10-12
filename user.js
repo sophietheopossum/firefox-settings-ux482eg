@@ -46,6 +46,7 @@ user_pref("dom.ipc.processCount.webIsolated", -1);
 user_pref("dom.max_script_run_time", 30);
 user_pref("dom.webgpu.enabled", true);
 user_pref("dom.webgpu.wgpu-backend", "vulkan");
+user_pref("floorp.memory.idleReclaim, {"enabled":true,"idleThresholdSec":900,"pollIntervalSec":60,"minIntervalSec":3600,"minResidentMB":4000,"reclaimOnGhostWindows":false};
 user_pref("general.smoothScroll.msdPhysics.enabled", true);
 // Floorp drops the "Firefox/<ver>" UA token by default; without it Keeper (and
 // UA-sniffing sites) cannot tell this is Firefox ("please update your Keeper app").
