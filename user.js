@@ -33,6 +33,7 @@ user_pref("browser.cache.max_shutdown_io_lag", 16);
 user_pref("browser.cache.memory.capacity", 1048576);
 user_pref("browser.gesture.swipe.left", "");
 user_pref("browser.gesture.swipe.right", "");
+user_pref("browser.tabs.min_inactive_duration_before_unload", 180000);
 user_pref("browser.tabs.unloadOnLowMemory", true);
 user_pref("content.notify.interval", 100000);
 //new  ui
