@@ -1,0 +1,7 @@
+# Energy-Efficient Ethernet off on the Realtek 2.5G USB dongle.
+# Numbered after 80-net-setup-link.rules: udev substitutes $name when the rule
+# is read, and only from rule 80 on is it the final name (enp0s13f0u1) rather
+# than the kernel's eth0, which is gone by the time ethtool runs.
+# EEE comes back whenever the dongle re-enumerates (replug, boot, every resume),
+# so it has to be set here, on each add.
+ACTION=="add", SUBSYSTEM=="net", ENV{ID_NET_DRIVER}=="r8152", ATTR{address}=="80:3f:5d:d0:85:8d", RUN+="/usr/bin/ethtool --set-eee $name eee off"
